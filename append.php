@@ -163,7 +163,7 @@
                   <select id = "laptop_ownership_input" class="custom-select">
                     <option selected value="personal unit">Personal Unit</option>
                     <option value="service unit">Service Unit</option>
-                    <option value="NO LAPTOP">No laptop</option>
+                    <option value="no laptop">No laptop</option>
                   </select>
               </div>
             </div>
@@ -191,81 +191,13 @@
           </div> 
             
           <h3 class="mt-3 text-dark">List of Product Categories</h3>
-          <div id="user_gadget_checklist_table" class="Chummies-Table" >
-            <div id='loading'>
-                <table id="user_gadget_checklist_data" class="table .table-bordered">
-                    <thead>
-                        <tr>
-                            <th scope="col">control number</th>
-                            <th scope="col">full name</th>
-                            <th scope="col">company id number</th>
-                            <th scope="col">company/department</th>
-                            <th scope="col">position</th>
-                            <th scope="col">model unit/date acquired</th>
-                            <th scope="col">IMEI number</th>
-                            <th scope="col">cellphone ownership type</th>
-                            <th scope="col">laptop unit</th>
-                            <th scope="col">serial number</th>
-                            <th scope="col">laptop ownership type</th>
-                            <th scope="col">requisition purpose</th>
-                            <th scope="col">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody id = "user_gadgets_data"> 
-                        <?php 
-                            $servername = "150.109.115.26";
-                            $port 		= "3306";
-                            $username   = "root";
-                            $password 	= "jfr3u9t";
-                            $dbname    	= "gadgetchecklist";
-                            $db = mysqli_connect($servername. ':' .$port, $username, $password, $dbname);
-
-                            $user_gadget_query =   "SELECT 
-                                                    id AS id,
-                                                    control_no AS control_number,
-                                                    full_name AS employee_name,
-                                                    company_id_no AS employee_id,
-                                                    company_department AS company_department,
-                                                    `position` AS employee_position,
-                                                    model_unit_date_acquired AS cp_unit_date_acquired,
-                                                    imei_no AS imei_no,
-                                                    ownership_type_cp AS cp_ownership_type,
-                                                    laptop AS laptop_unit_date_acquired,
-                                                    serial_no AS laptop_serial_number,
-                                                    ownership_type_laptop AS laptp_onwership_type,
-                                                    requisition_purpose AS laptop_requisition_purpose
-                                                    FROM `gadget_checklists` ";
-                            $result = mysqli_query($db,$user_gadget_query);
-                                if (mysqli_fetch_array($result) > 0) {
-                                    while($row = mysqli_fetch_array($result))  
-                                        {  
-                                            echo '<tr>
-                                                        <td>'.$row['control_number'].'</td>
-                                                        <td>'.$row['employee_name'].'</td>
-                                                        <td>'.$row['employee_id'].'</td>
-                                                        <td>'.$row['company_department'].'</td>
-                                                        <td>'.$row['employee_position'].'</td>
-                                                        <td>'.$row['cp_unit_date_acquired'].'</td>
-                                                        <td>'.$row['imei_no'].'</td>
-                                                        <td>'.$row['cp_ownership_type'].'</td>
-                                                        <td>'.$row['laptop_unit_date_acquired'].'</td>
-                                                        <td>'.$row['laptop_serial_number'].'</td>
-                                                        <td>'.$row['laptp_onwership_type'].'</td>
-                                                        <td>'.$row['laptop_requisition_purpose'].'</td>
-                                                        <td><button class = "btn btn-success" id="btn_edit_user_gadget" name="btn_edit_user_gadget" data-id='.$row['id'].' >Edit</button></td>
-                                                    </tr>'; 
-                                                   }  
-                                               }
-                                else
-                                {
-                                    echo ' <td colspan="5">No Records Found</td> ';
-                                }
-                        ?>
-                                                
-                    </tbody>  
-                </table>
+          <div class="container-fluid mt-3" style="background-color:white;">
+            <div id="user_gadget_table">
+            
             </div>
+
           </div>
+
          </div>
         </div>
       </div>
@@ -299,15 +231,15 @@
         <script type="text/javascript" src="js/bootstrap.js"></script>
         <script type="text/javascript" src="js/dataTables.bootstrap.js"></script>   
         <!-- my script -->
-        <script src = "pages/includes/myjs.js"> </script> 
-        <script type="text/javascript">
+        <script src = "pages/includes/myjs2.js"> </script> 
+        <!-- <script type="text/javascript">
           $(document).ready(function() {
             $('#user_gadget_checklist_data').DataTable( {
                 dom: 'Bfrtip',
                 buttons: ['copy', 'csv', 'excel']
             });
           });
-        </script>        
+        </script>         -->
 
 </body>
 </html>

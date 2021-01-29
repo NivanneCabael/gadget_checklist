@@ -1,11 +1,11 @@
 $(document).ready(function()
 {
     // display_user_checklist();
-    //add new user
-    add_user();
-    get_user_gadget_row();
-    udpate_user_gadget();
-    // display_user_checklist();
+    // //add new user
+    // add_user();
+    // get_user_gadget_row();
+    // udpate_user_gadget();
+    display_user_checklist();
 
 
 })
@@ -188,15 +188,10 @@ function display_user_checklist()
     $.ajax(
         {
             url : 'pages/view_gadget_list.php',
-            type : 'post',
-            dataType: 'html',
+            method : 'post',
             success : function(data) 
             {
-                // console.log(data);
-                    $('#user_gadgets_data').append(data);
-                    $('#user_gadget_checklist_data').DataTable();
-                    // $('#user_gadgets_data').html(data);
-
+                $('#user_gadget_table').html(data);
             }
         })
 }
