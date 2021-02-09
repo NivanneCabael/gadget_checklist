@@ -48,7 +48,7 @@ function display_user_gadget_data()
 	$user_gadget_result = mysqli_query($db,$user_gadget_query);
 
 	while ($row = mysqli_fetch_assoc($user_gadget_result)) 
-	{
+	{        
 		$value.= '<tr>
                     <td>'.$row['control_number'].'</td>
                     <td>'.$row['employee_name'].'</td>
@@ -65,8 +65,10 @@ function display_user_gadget_data()
                     <td><button class = "btn btn-success" id="btn_edit_user_gadget" name="btn_edit_user_gadget" data-id='.$row['id'].' >Edit</button></td>
 				</tr>';
 	}
-	$value.='</table>';
-	echo $value;
+    $value.='</table>';
+    // echo $value;
+   // echo json_encode($user_gadget_data);
+	echo json_encode(['status'=>'success','html'=>$value]);
 }
 
 

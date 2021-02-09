@@ -20,20 +20,19 @@ if ($db) {
 	while ( ($data = fgetcsv($handle,100000,",") ) !== false)  
 	{
             $count++;
-            $id 	                    = $data[0];
-            $control_number 	        = $data[1];
-            $employee_name	            = $data[2];
-            $company_id		            = $data[3];
-            $company_department	        = $data[4];
-            $employee_position 	        = $data[5];
-            $date_today		            = $data[6];
-            $date_acquired_model_unit   = $data[7];
-            $imei_no		            = $data[8];
-            $cp_owenership_type		    = $data[9];
-            $laptop_status		        = $data[10];
-            $serial_no		            = $data[11];
-            $laptop_owenership_type		= $data[12];
-            $requisition_purpose		= $data[13];
+            $control_number 	        = $data[0];
+            $employee_name	          = $data[1];
+            $company_id		            = $data[2];
+            $company_department	      = $data[3];
+            $employee_position 	      = $data[4];
+            $date_today		            = $data[55];
+            $date_acquired_model_unit = $data[6];
+            $imei_no		              = $data[7];
+            $cp_owenership_type		    = $data[8];
+            $laptop_status		        = $data[9];
+            $serial_no		            = $data[10];
+            $laptop_owenership_type		= $data[11];
+            $requisition_purpose		  = $data[12];
 
             // $date 	= date('Y-m-d H:i:s', $date_time);
             
@@ -58,12 +57,12 @@ if ($db) {
 			        //if the data is not a duplicate, insert the data.
               if ($count > 1) {
                 $query = "INSERT INTO gadget_checklists( 
-                              id,control_no, full_name, company_id_no, company_department, position,model_unit_date_acquired	
+                              control_no, full_name, company_id_no, company_department, position,model_unit_date_acquired	
                               ,imei_no,ownership_type_cp,laptop,serial_no,ownership_type_laptop,requisition_purpose) 
-                                  VALUES ('$id','$control_number','$employee_name','$uppercased_company_id','$uppercased_company_department','$employee_position','$date_acquired_model_unit',
+                                  VALUES ('$control_number','$employee_name','$uppercased_company_id','$uppercased_company_department','$employee_position','$date_acquired_model_unit',
                                 '$imei_no','$cp_owenership_type','$laptop_status','$uppercased_serial_no','$laptop_owenership_type','$requisition_purpose')";
                               $result = mysqli_query($db, $query);
-                            // header("Location: insert_function.php?import=success");
+                            header("Location: import_users.php?import=success");
 
               }
 

@@ -191,7 +191,13 @@ function display_user_checklist()
             method : 'post',
             success : function(data) 
             {
-                $('#user_gadget_table').html(data);
+            
+                // console.log(data);
+                data = $.parseJSON(data);
+                if (data.status == 'success') 
+                {
+                    $('#user_gadget_table').html(data.html);
+                }
             }
         })
 }

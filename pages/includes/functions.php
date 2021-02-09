@@ -10,82 +10,108 @@ function insert_gadget_db()
     // connect to database
     $db = mysqli_connect($servername. ':' .$port, $username, $password, $dbname);
 
-    $fetched_control_no		        = mysqli_real_escape_string($db,$_POST['control_no']);
-    $fetched_employee_name			= mysqli_real_escape_string($db,$_POST['employee_name']);
-    $fetched_employee_id        	= mysqli_real_escape_string($db,$_POST['company_id']);
-    $fetched_company_department		= mysqli_real_escape_string($db,$_POST['company_department']);
-    $fetched_employee_position  	= mysqli_real_escape_string($db,$_POST['employee_position']);
-    $fetched_phone_unit 			= mysqli_real_escape_string($db,$_POST['phone_unit']);
-    $fetched_phone_imei_number		= mysqli_real_escape_string($db,$_POST['imei_number']);
-    $fetched_phone_ownership_type	= mysqli_real_escape_string($db,$_POST['phone_ownership']);
-    $fetched_laptop_unit     		= mysqli_real_escape_string($db,$_POST['laptop_unit']);
-    $fetched_laptop_serial_number	= mysqli_real_escape_string($db,$_POST['laptop_serial_number']);
-    $fetched_laptop_ownership_type	= mysqli_real_escape_string($db,$_POST['laptop_ownership']);
-    $fetched_laptop_requisition 	= mysqli_real_escape_string($db,$_POST['laptop_requisition_purpose']);
+    $sub_path = '\Employee_img\\' . $_POST['company_id'] . '.jpg';
+    $employee_pic_base_64 = $_POST['employee_picture'];
+    $file_path = getcwd() . $sub_path;
+    // chmod($file_path , 755);
+
+    $path = base64_to_jpeg($employee_pic_base_64, $file_path);
+    $seperated_url  = explode('\\gadget_checklist', $file_path, 6);
+    $url = $seperated_url[1];
+    // echo $url;
+    
+    $fetched_control_no		            = mysqli_real_escape_string($db,$_POST['control_no']);
+    $fetched_employee_name			    = mysqli_real_escape_string($db,$_POST['employee_name']);
+    $fetched_employee_id        	    = mysqli_real_escape_string($db,$_POST['company_id']);
+    $fetched_company_department		    = mysqli_real_escape_string($db,$_POST['company_department']);
+    $fetched_employee_position  	    = mysqli_real_escape_string($db,$_POST['employee_position']);
+    $fetched_phone_unit 			    = mysqli_real_escape_string($db,$_POST['phone_unit']);
+    $fetched_phone_imei_number		    = mysqli_real_escape_string($db,$_POST['imei_number']);
+    $fetched_phone_ownership_type	    = mysqli_real_escape_string($db,$_POST['phone_ownership']);
+    $fetched_laptop_unit     		    = mysqli_real_escape_string($db,$_POST['laptop_unit']);
+    $fetched_laptop_serial_number	    = mysqli_real_escape_string($db,$_POST['laptop_serial_number']);
+    $fetched_laptop_ownership_type	    = mysqli_real_escape_string($db,$_POST['laptop_ownership']);
+    $fetched_laptop_requisition 	    = mysqli_real_escape_string($db,$_POST['laptop_requisition_purpose']);
     $fetched_laptop_requisition_reason 	= mysqli_real_escape_string($db,$_POST['laptop_requisition_purpose_reason']);
+    
+    // echo $url . '<br>';
+    // echo $fetched_control_no . '<br>';
+    // echo $fetched_employee_name . '<br>';
+    // echo $fetched_employee_id . '<br>';
+    // echo $fetched_company_department . '<br>';
+    // echo $fetched_employee_position . '<br>';
+    // echo $fetched_phone_unit . '<br>';
+    // echo $fetched_phone_imei_number . '<br>';
+    // echo $fetched_phone_ownership_type . '<br>';
+    // echo $fetched_laptop_unit . '<br>';
+    // echo $fetched_laptop_serial_number . '<br>';
+    // echo $fetched_laptop_ownership_type . '<br>';
+    // echo $fetched_laptop_requisition . '<br>';
+    // echo $fetched_laptop_requisition_reason . '<br>';
+
+    // $result = mysqli_query($db, "SELECT * FROM images");
 
 
-
-    if($_POST['laptop_requisition_purpose'] == 'Others')
-	 {
-		$insert_new_user = "INSERT INTO gadget_checklists(
-            control_no,
-            full_name,
-            company_id_no,
-            company_department,
-            POSITION,
-            model_unit_date_acquired,
-            imei_no,
-            ownership_type_cp,
-            laptop,
-            serial_no,
-            ownership_type_laptop,
-            requisition_purpose)
-            VALUES (
-            ' $fetched_control_no',
-            '$fetched_employee_name',
-            '$fetched_employee_id',
-            '$fetched_company_department',
-            '$fetched_employee_position',
-            '$fetched_phone_unit',
-            '$fetched_phone_imei_number',
-            '$fetched_phone_ownership_type',
-            '$fetched_laptop_unit',
-            '$fetched_laptop_serial_number',
-            '$fetched_laptop_ownership_type',
-            '$fetched_laptop_requisition_reason')";
-        $result_insert = mysqli_query($db,$insert_new_user);
-	}
-	else 
-	{
-		$insert_new_user = "INSERT INTO gadget_checklists(
-            control_no,
-            full_name,
-            company_id_no,
-            company_department,
-            POSITION,
-            model_unit_date_acquired,
-            imei_no,
-            ownership_type_cp,
-            laptop,
-            serial_no,
-            ownership_type_laptop,
-            requisition_purpose)
-            VALUES (
-            ' $fetched_control_no',
-            '$fetched_employee_name',
-            '$fetched_employee_id',
-            '$fetched_company_department',
-            '$fetched_employee_position',
-            '$fetched_phone_unit',
-            '$fetched_phone_imei_number',
-            '$fetched_phone_ownership_type',
-            '$fetched_laptop_unit',
-            '$fetched_laptop_serial_number',
-            '$fetched_laptop_ownership_type',
-            '$fetched_laptop_requisition')";
-        $result_insert = mysqli_query($db,$insert_new_user);
-	}
+    // if($_POST['laptop_requisition_purpose'] == 'Others')
+	//  {
+	// 	$insert_new_user = "INSERT INTO gadget_checklists(
+    //         control_no,
+    //         full_name,
+    //         company_id_no,
+    //         company_department,
+    //         POSITION,
+    //         model_unit_date_acquired,
+    //         imei_no,
+    //         ownership_type_cp,
+    //         laptop,
+    //         serial_no,
+    //         ownership_type_laptop,
+    //         requisition_purpose)
+    //         VALUES (
+    //         ' $fetched_control_no',
+    //         '$fetched_employee_name',
+    //         '$fetched_employee_id',
+    //         '$fetched_company_department',
+    //         '$fetched_employee_position',
+    //         '$fetched_phone_unit',
+    //         '$fetched_phone_imei_number',
+    //         '$fetched_phone_ownership_type',
+    //         '$fetched_laptop_unit',
+    //         '$fetched_laptop_serial_number',
+    //         '$fetched_laptop_ownership_type',
+    //         '$fetched_laptop_requisition_reason')";
+    //     $result_insert = mysqli_query($db,$insert_new_user);
+	// }
+	// else 
+	// {
+	// 	$insert_new_user = "INSERT INTO gadget_checklists(
+    //         control_no,
+    //         full_name,
+    //         company_id_no,
+    //         company_department,
+    //         POSITION,
+    //         model_unit_date_acquired,
+    //         imei_no,
+    //         ownership_type_cp,
+    //         laptop,
+    //         serial_no,
+    //         ownership_type_laptop,
+    //         requisition_purpose)
+    //         VALUES (
+    //         ' $fetched_control_no',
+    //         '$fetched_employee_name',
+    //         '$fetched_employee_id',
+    //         '$fetched_company_department',
+    //         '$fetched_employee_position',
+    //         '$fetched_phone_unit',
+    //         '$fetched_phone_imei_number',
+    //         '$fetched_phone_ownership_type',
+    //         '$fetched_laptop_unit',
+    //         '$fetched_laptop_serial_number',
+    //         '$fetched_laptop_ownership_type',
+    //         '$fetched_laptop_requisition')";
+    //     $result_insert = mysqli_query($db,$insert_new_user);
+	// }
 }
 
 function fetch_row_data()
@@ -196,5 +222,23 @@ function update_gadget_db()
     $result = mysqli_query($db,$update_category_query);
 	}
     
+}
+
+function base64_to_jpeg($base64_string, $output_file) {
+    // open the output file for writing
+    $ifp = fopen( $output_file, 'wb' ); 
+
+    // split the string on commas
+    // $data[ 0 ] == "data:image/png;base64"
+    // $data[ 1 ] == <actual base64 string>
+    $data = explode( ',', $base64_string );
+
+    // we could add validation here with ensuring count( $data ) > 1
+    fwrite( $ifp, base64_decode( $data[ 1 ] ) );
+
+    // clean up the file resource
+    fclose( $ifp ); 
+
+    return $output_file; 
 }
 ?>

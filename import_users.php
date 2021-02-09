@@ -86,7 +86,7 @@ session_start();
             </a>
           </li>
 
-            <li class="nav-header">Logout</li>
+          <li class="nav-header">Logout</li>
           <li class="nav-item">
             <a href="logout_function.php" class="nav-link">
               <i class="nav-icon far fa-calendar-alt"></i>
@@ -95,7 +95,6 @@ session_start();
               </p>
             </a>
           </li>
-
 
           <!-- <li class="nav-header">Logout</li>
           <li class="nav-item">
@@ -115,16 +114,27 @@ session_start();
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h3 class="m-0 text-dark">Dashboard  </h3>
+            <h3 class="m-0 text-dark">Import Gadget Checklist  </h3>
           </div>
           
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="index.php">Dashboard</a></li>
-              <!-- <li class="breadcrumb-item active">Products</li> -->
+              <li class="breadcrumb-item"><a href="index.php">Home</a></li>
+              <li class="breadcrumb-item active">Import</li>
             </ol>
           </div>
 
+
+           <div class="container-fluid mt-3" style="background-color:white;">
+            <form action="insert_function.php" method="post" enctype="multipart/form-data">
+            <div>
+                <label>Choose CSV File</label> 
+                <input type="file" name="filename" id="file" accept=".csv" required>
+                <button type="submit" id="submit" name="submit" class="btn-submit">Import</button>
+            </div>
+
+            </form>
+          </div> 
          </div>
         </div>
       </div>
