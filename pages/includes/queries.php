@@ -9,7 +9,7 @@ $get_department_query = "SELECT
 $department_result  = mysqli_query($db, $get_department_query);
 
 $get_company_query = "SELECT
-    id AS company,
+    id AS company_id,
     name AS company_name
     FROM company";
 $company_result  = mysqli_query($db, $get_company_query);

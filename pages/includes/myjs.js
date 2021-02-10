@@ -11,7 +11,7 @@ $(document).ready(function()
    
 })
 
-function add_user()
+function add_employee()
 {
     $(document).on('click','#btn_employee_submit',function()
 	{
@@ -34,11 +34,25 @@ function add_user()
             console.log('Error: ', error);
           };
 
-        // // console.log(employee_name + " " + company_id + " " + company_department + " " + employee_position + " " + phone_unit + " " + phone_date_acquired + " " 
-        // // + imei_number + " " + phone_ownership + " " + laptop_unit + " "  + laptop_date_acquired + " "  + laptop_serial_number + " "  + laptop_ownership + " "  
-        // // + laptop_requisition_purpose + " "  );
+	})
+}
 
-		// if (employee_name == "" || company_id == "") 
+function submit_img(img_string)
+{
+    	
+        var employee_id	                        = $('#employee_id_input').val();
+        var employee_name 		                = $('#employee_name_input').val();
+        var employee_company		            = $('#employee_company_input').val();
+        var employee_department	                = $('#employee_department_input').val();
+        var employee_position                   = $('#employee_position_input').val();
+
+        console.log(employee_id);
+        console.log(employee_name);
+        console.log(employee_company);
+        console.log(employee_department);
+        console.log(employee_position);
+        
+        // if (employee_id == "") 
 		// {
 		// 	alert("Please Fill in all the fields");
 		// 	// console.log("Some input fields are empty!");
@@ -49,22 +63,13 @@ function add_user()
 		// 	{
 		// 		url : 'pages/add_new_user_gadget.php',
 		// 		method : 'post',
-		// 		formData : {
-        //             employee_picture            :employee_picture,
-        //             control_no			        :control_no,
+		// 		data : {
+        //             employee_picture            :img_string,
+        //             employee_id			        :employee_id,
 		// 			employee_name			    :employee_name,
-        //             company_id 	                :company_id,
-        //             company_department			:company_department,
-        //             employee_position 	        :employee_position,
-        //             phone_unit			        :phone_unit,
-        //             imei_number			        :imei_number,
-        //             phone_ownership 	        :phone_ownership,
-        //             laptop_unit			        :laptop_unit,
-        //             laptop_serial_number		:laptop_serial_number,
-        //             laptop_ownership 	        :laptop_ownership,
-        //             laptop_requisition_purpose	:laptop_requisition_purpose,
-        //             laptop_requisition_purpose_reason: laptop_requisition_purpose_reason
-
+        //             employee_company 	        :employee_company,
+        //             employee_department			:employee_department,
+        //             employee_position 	        :employee_position
 		// 		},
 		// 	// success : function(data)
 		// 	// {
@@ -78,65 +83,6 @@ function add_user()
 		// 	// }	
 		// 	})
 		// }
-	})
-}
-
-function submit_img(img_string)
-{
-        var control_no 		            = $('#control_number_input').val();
-		var employee_name 		        = $('#employee_name_input').val();
-        var company_id	                = $('#company_id_input').val();
-        var company_department 		    = $('#company_department_input').val();
-        var employee_position	        = $('#employee_position_input').val();
-        var phone_unit 		            = $('#phone_unit_input').val();
-        var imei_number 		        = $('#imei_number_input').val();
-        var phone_ownership	            = $('#phone_ownership_input').val();
-        var laptop_unit 		        = $('#laptop_unit_input').val();
-        var laptop_serial_number 	    = $('#laptop_serial_number_input').val();
-        var laptop_ownership	        = $('#laptop_ownership_input').val();
-        var laptop_requisition_purpose  = $('#laptop_requisition_purpose_input').val();
-        var laptop_requisition_purpose_reason  = $('#laptop_requisition_purpose_reason_input').val();
-
-        if (employee_name == "" || company_id == "") 
-		{
-			alert("Please Fill in all the fields");
-			// console.log("Some input fields are empty!");
-		}
-		else
-		{
-			$.ajax(
-			{
-				url : 'pages/add_new_user_gadget.php',
-				method : 'post',
-				data : {
-                    employee_picture            :img_string,
-                    control_no			        :control_no,
-					employee_name			    :employee_name,
-                    company_id 	                :company_id,
-                    company_department			:company_department,
-                    employee_position 	        :employee_position,
-                    phone_unit			        :phone_unit,
-                    imei_number			        :imei_number,
-                    phone_ownership 	        :phone_ownership,
-                    laptop_unit			        :laptop_unit,
-                    laptop_serial_number		:laptop_serial_number,
-                    laptop_ownership 	        :laptop_ownership,
-                    laptop_requisition_purpose	:laptop_requisition_purpose,
-                    laptop_requisition_purpose_reason: laptop_requisition_purpose_reason
-
-				},
-			// success : function(data)
-			// {
-            //     alert("Data Has been Inserted Successfully")
-            //     // location.reload();
-            //     // clear_fields();
-
-			// 	// console.log("Sucessfully inserted the data");
-			// 	// $('form').trigger('reset');
-			// 	// display_category();
-			// }	
-			})
-		}
 }
 
 function get_user_gadget_row()
