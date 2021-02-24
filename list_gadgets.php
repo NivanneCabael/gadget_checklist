@@ -10,6 +10,7 @@ session_start();
     {
         header("location:login_page.php");
     }
+    include 'pages/includes/queries.php';
 ?>
 <head>
   <meta charset="utf-8">
@@ -48,64 +49,9 @@ session_start();
       <h3><center>CMS</center></h3>
     </a>
 
-    <div class="sidebar">
-      <nav class="mt-2">
-        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-          <li class="nav-item has-treeview menu-closed">
-            <a href="index.php" class="nav-link">
-              <i class="nav-icon fas fa-tachometer-alt"></i>
-              <p>Dashboard
-                <i class="right fas fa-angle-left"></i>
-              </p>
-            </a>
-
-            <ul class="nav nav-treeview">
-              <li class="nav-item">
-                <a href="index.php" class="nav-link active">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Dashboard v1</p>
-                </a>
-              </li>
-            </ul>
-          </li>
-  
-          <li class="nav-header">Gadget Checklist</li>
-          <li class="nav-item">
-            <a href="list_gadgets.php" class="nav-link">
-              <i class="nav-icon far fa-calendar-alt"></i>
-              <p> Add User </p>
-            </a>
-          </li>
-
-          <li class="nav-item">
-            <a href="import_users.php" class="nav-link">
-              <i class="nav-icon far fa-calendar-alt"></i>
-              <p>
-                Import User gadget
-              </p>
-            </a>
-          </li>
-
-          <li class="nav-header">Logout</li>
-          <li class="nav-item">
-            <a href="logout_function.php" class="nav-link">
-              <i class="nav-icon far fa-calendar-alt"></i>
-              <p>
-                Logout
-              </p>
-            </a>
-          </li>
-
-          <!-- <li class="nav-header">Logout</li>
-          <li class="nav-item">
-            <a href="calendar.html" class="nav-link">
-              <i class="nav-icon far fa-calendar-alt"></i>
-              <p>Logout</p>
-            </a>
-          </li> -->
-        </ul>
-      </nav>
-    </div>
+    <?php 
+      include('nav.php');
+     ?>
 
 </aside>
 
@@ -118,44 +64,48 @@ session_start();
                         <h2>Manage Employee Gadgets</h2>
                     </div>
                     <div class="col-sm-6">
-                        <a href="#addEmployeeModal" class="btn btn-success" data-toggle="modal"><i class="material-icons">&#xE147;</i> <span>Add New Employee</span></a>                    </div>
+                        <a href="#addEmployeeModal" class="btn btn-success" data-toggle="modal"><i class="material-icons">&#xE147;</i> <span>Add New Gadget</span></a>                    </div>
                 </div>
             </div>
             <table class="table table-striped table-hover user_gadget_checklist_data">
                 <thead>
                     <tr>
                         <th scope="col">control number</th>
-                        <th scope="col">full name</th>
-                        <th scope="col">company id number</th>
-                        <th scope="col">company/department</th>
-                        <th scope="col">position</th>
-                        <th scope="col">Action</th>
+                        <th scope="col">employee_id</th>
+                        <th scope="col">employee_name</th>
+                        <th scope="col">gadget_name</th>
+                        <th scope="col">gadget identification</th>
+                        <th scope="col">gadget type</th>
+                        <th scope="col">submitted_at</th>
+                        <th scope="col" style = "text-align:center">Edit</th>
+                        <th scope="col" style = "text-align:center">Delete</th>
                     </tr>
                 </thead>
                 <tbody id = "user_gadgets_data"> 
                         <?php 
-                            $servername = "150.109.115.26";
-                            $port 		= "3306";
-                            $username   = "root";
-                            $password 	= "jfr3u9t";
-                            $dbname    	= "gadgetchecklist";
-                            $db = mysqli_connect($servername. ':' .$port, $username, $password, $dbname);
+                            // $servername = "150.109.115.26";
+                            // $port 		= "3306";
+                            // $username   = "root";
+                            // $password 	= "jfr3u9t";
+                            // $dbname    	= "gadgetchecklist";
+                            // // connect to database
+                            // $db = mysqli_connect($servername. ':' .$port, $username, $password, $dbname);
+                            require_once('pages/includes/db_connection_localhost.php');
 
                             $user_gadget_query =   "SELECT 
-                                                    id AS id,
-                                                    control_no AS control_number,
-                                                    full_name AS employee_name,
-                                                    company_id_no AS employee_id,
-                                                    company_department AS company_department,
-                                                    `position` AS employee_position,
-                                                    model_unit_date_acquired AS cp_unit_date_acquired,
-                                                    imei_no AS imei_no,
-                                                    ownership_type_cp AS cp_ownership_type,
-                                                    laptop AS laptop_unit_date_acquired,
-                                                    serial_no AS laptop_serial_number,
-                                                    ownership_type_laptop AS laptp_onwership_type,
-                                                    requisition_purpose AS laptop_requisition_purpose
-                                                    FROM `gadget_checklists`
+                                                    a.id AS id,
+                                                    a.control_number AS control_number,
+                                                    b.employee_id AS employee_id,
+                                                    b.employee_name AS employee_name,
+                                                    a.gadget_name AS gadget_name,
+                                                    a.gadget_identification AS gadget_identification,
+                                                    v.name AS gadget_type,
+                                                    a.created_at AS submitted_at
+                                                    FROM 
+                                                    gadget_checklist AS a 
+                                                    LEFT JOIN employee AS b on b.id = a.employee_id
+                                                    LEFT JOIN gadget_type AS v ON v.id = a.gadget_type
+                                                    WHERE b.employee_status = 1 AND a.gadget_status = 1
                                                     ";
                             $result = mysqli_query($db,$user_gadget_query);
                                 if (mysqli_fetch_array($result) > 0) {
@@ -163,13 +113,18 @@ session_start();
                                         {  
                                             echo '<tr>
                                                         <td>'.$row['control_number'].'</td>
-                                                        <td>'.$row['employee_name'].'</td>
                                                         <td>'.$row['employee_id'].'</td>
-                                                        <td>'.$row['company_department'].'</td>
-                                                        <td>'.$row['employee_position'].'</td>
+                                                        <td>'.$row['employee_name'].'</td>
+                                                        <td>'.$row['gadget_name'].'</td>
+                                                        <td>'.$row['gadget_identification'].'</td>
+                                                        <td>'.$row['gadget_type'].'</td>
+                                                        <td>'.$row['submitted_at'].'</td>
                                                         <td>
                                                             <button class = "btn btn-success" id="btn_edit_user_gadget" name="btn_edit_user_gadget" data-id='.$row['id'].' data-toggle="modal" data-target="#editEmployeeModal"  >Edit</button>
-                                                        </td>                                                   
+                                                        </td> 
+                                                        <td>
+                                                            <button class = "btn btn-danger" id="btn_delete_user_gadget" name="btn_delete_user_gadget" data-id1='.$row['id'].'>Delete</button>
+                                                        </td>                                                     
                                                     </tr>'; 
                                                    }  
                                                }
@@ -196,89 +151,94 @@ session_start();
      </div>
      <div class="modal-body">     
         <div class="row mt-1">
-                <div class="form-group col-lg-3">
-                    <label>Employee Image</label>
-                    <input type="file" class="form-control-file" id="employee_picture_input" name="employee_picture_input" accept="image/*">
+                <div class="form-group col-lg-6">
+                    <label>Employee ID</label>
+                    <input type="input" class="form-control" name="employee_id_input" id = "employee_id_input" aria-describedby="emailHelp" placeholder="Employee ID" >
                 </div>
-                <div class="form-group col-lg-3">
-                    <label>Employee ID number</label>
-                    <input type="input" class="form-control" id="company_id_input" aria-describedby="emailHelp" placeholder="Company ID" >
-                </div>
-                <div class="form-group col-lg-3">
+                <div class="form-group col-lg-6">
                     <label>Control Number</label>
-                    <input type="hidden" class="form-control my-2" placeholder="User Name" id="user_gadget_hidden_id">
-                    <input type="input" class="form-control" id="control_number_input" aria-describedby="emailHelp" placeholder="Control number" >
-                </div>
-                <div class="form-group col-lg-3">
-                    <label>Employee Name</label>
-                    <input type="input" class="form-control" id="employee_name_input" placeholder="Employee Name" >
-                </div>
-                <div class="form-group col-lg-3">
-                    <label>Company/Department</label>
-                    <input type="input" class="form-control" id="company_department_input" aria-describedby="emailHelp" placeholder="Company/Department" >
+                    <input type="input" class="form-control" name="control_number_input" id="control_number_input" aria-describedby="emailHelp" placeholder="Control Number" >
                 </div>
         </div>
         <div class="row mt-1">
-                <div class="form-group col-lg-3">
-                    <label>Position</label>
-                    <input type="input" class="form-control" id="employee_position_input" aria-describedby="emailHelp" placeholder="Position" >
+                <div class="form-group col-lg-6">
+                    <label>Gadget name</label>
+                    <input type="input" class="form-control" name="gadget_name_input"  id="gadget_name_input" aria-describedby="emailHelp" placeholder="Device Name" >
                 </div>
-              <div class="form-group col-lg-3">
-                  <label>Model Unit / Date Acquired</label>
-                  <input type="input" class="form-control" id="phone_unit_input" aria-describedby="emailHelp" placeholder="Model Unit / Date Acquired " >
-              </div>
-              <div class="form-group col-lg-3">
-                  <label>IMEI number </label>
-                  <input type="input" class="form-control" id="imei_number_input" aria-describedby="emailHelp" placeholder="IMEI number" >
-              </div>
-              <div class="form-group col-lg-3">
-                  <label>Type of ownership</label><br>
-                  <select id="phone_ownership_input"  name="phone_ownership_input"  class="custom-select">
-                    <option selected value="Personal Unit">Personal Unit</option>
-                    <option value="Service Unit">Service Unit</option>
-                  </select>
-              </div>
+                <div class="form-group col-lg-6">
+                    <input type="hidden" class="form-control my-2" placeholder="User Name" id="employee_hidden_id">
+                    <label>Gadget Identification</label>
+                    <input type="input" class="form-control" name="gadget_identification_input"  id="gadget_identification_input" aria-describedby="emailHelp" placeholder="Serial Number/IMEI" >
+                </div>                
         </div>
         <div class="row mt-1">
-            <div class="form-group col-lg-3">
-                <label>Laptop Unit/Date Acquired</label><br>
-                <input type="input" class="form-control" id="laptop_unit_input" aria-describedby="emailHelp" placeholder="Laptop Unit / Date Acquired" >
-            </div>
-            <div class="form-group col-lg-3">
-                <label>Serial Number </label>
-                <input type="input" class="form-control" id="laptop_serial_number_input" aria-describedby="emailHelp" placeholder="Serial Number" >
-            </div>
-            <div class="form-group col-lg-3">
-                <label>Type of ownership</label><br>
-                <select id = "laptop_ownership_input" class="custom-select">
-                    <option selected value="personal unit">Personal Unit</option>
-                    <option value="service unit">Service Unit</option>
-                    <option value="NO LAPTOP">No laptop</option>
-                </select>
-            </div>
+                <div class="form-group col-lg-6">
+                    <input type="hidden" class="form-control my-2" placeholder="User Name" id="employee_hidden_id">
+                    <label>Date Acquired</label>
+                    <input type="date" class="form-control" name="gadget_acquired_date"  id="gadget_acquired_date" aria-describedby="emailHelp" placeholder="Serial Number/IMEI" >
+                </div>
+                
+                <div class="form-group col-lg-6">
+                    <label>Ownership Type</label>
+                    <div class="dropdown">
+                      <select id="ownership_type_input" name="ownership_type_input" class="form-control">
+                        <?php
+                          while ($ownership_row = mysqli_fetch_array($ownership_result)) {
+                            $ownership_id = $ownership_row['ownership_id'];
+                            $ownership = $ownership_row['ownership_name'];
+                            echo "<option class='dropdown-item' value='$ownership_id'> $ownership</option>";
+                          }
+                        ?>
+                      </select>
+                    </div>
+                </div>
         </div>
+
         <div class="row mt-1">
-            <div class="form-group col-lg-3">
-                <label>Requsition Purpose</label><br>
-                <select id = "laptop_requisition_purpose_input" class="custom-select">
-                    <option selected value="First Time">First Time</option>
-                    <option value="Loss">Loss</option>
-                    <option value="Additional Gadget">Additional Gadget</option>
-                    <option value="Change of Unit">Change of Unit</option>
-                    <option value="Checklist Replacement">Checklist Replacement</option>
-                    <option value="Others">Others:</option>
-                  </select>
-            </div>
-            <div class="form-group col-lg-6">
-                <label>Requisition Purpose Reason</label>
-                <input type="input" class="form-control" id="laptop_requisition_purpose_reason_input" aria-describedby="emailHelp" placeholder="Requisition purpose reason" >
-            </div>
+                <div class="form-group col-lg-6">
+                    <label>Gadget Type</label>
+                    <div class="dropdown">
+                      <select id="gadget_type_input" name="gadget_type_input" class="form-control">
+                        <?php
+                          while ($gadget_row = mysqli_fetch_array($gadget_result)) {
+                            $gadget_id = $gadget_row['gadget_id'];
+                            $gadget = $gadget_row['gadget_name'];
+                            echo "<option class='dropdown-item' value='$gadget_id'> $gadget</option>";
+                          }
+                        ?>
+                      </select>
+                  </div>
+                </div>
+                <div class="form-group col-lg-6">
+                    <label>Requisition Type</label>
+                    <div class="dropdown">
+                      <select id="requisition_type_input" id="requisition_type_input" class="form-control">
+                        <?php
+                          while ($requisition_row = mysqli_fetch_array($requisition_result)) {
+                            $requisition_id = $requisition_row['requisition_id'];
+                            $requisition = $requisition_row['requisition_name'];
+                            echo "<option class='dropdown-item' value='$requisition_id'> $requisition</option>";
+                          }
+                        ?>
+                      </select>
+                  </div>
+                </div>
         </div>
+
+        <div class="row mt-1">
+                <div class="form-group col-lg-6">
+                    <label>Requisition Reason</label>
+                    <input type="input" class="form-control" name = "requisition_reason_input" id="requisition_reason_input" aria-describedby="emailHelp" placeholder="Reason" >
+                </div>
+        </div>
+
+        
+
      </div>
      <div class="modal-footer">
         <div class="col-md-12 text-right">
             <input type="button" id = 'btn_cancel' name = 'btn_cancel' class="btn btn-default" data-dismiss="modal" value="Cancel">
-            <button type="button" id = 'btn_submit' name = 'btn_submit' class="btn btn-primary mb-2">Submit</button>
+            <button type="button" id = 'btn_gadget_submit' name = 'btn_gadget_submit' class="btn btn-primary mb-2">Submit</button>
         </div>
      </div>
     </form>
@@ -297,84 +257,93 @@ session_start();
      </div>
      <div class="modal-body">     
         <div class="row mt-1">
-                <div class="form-group col-lg-3">
+                <div class="form-group col-lg-6">
+                    <input type="hidden" class="form-control my-2" placeholder="User Name" id="gadget_hidden_id">
+                    <label>Employee ID</label>
+                    <input type="input" class="form-control" name="employee_id_input_edit" id = "employee_id_input_edit" aria-describedby="emailHelp" placeholder="Employee ID" >
+                </div>
+                <div class="form-group col-lg-6">
                     <label>Control Number</label>
-                    <input type="hidden" class="form-control my-2" placeholder="User Name" id="user_gadget_hidden_id">
-                    <input type="input" class="form-control" id="control_number_input_edit" aria-describedby="emailHelp" placeholder="Control number" >
-                </div>
-                <div class="form-group col-lg-3">
-                    <label>Employee Name</label>
-                    <input type="input" class="form-control" id="employee_name_input_edit" placeholder="Employee Name" >
-                </div>
-                <div class="form-group col-lg-3">
-                    <label>Company ID number</label>
-                    <input type="input" class="form-control" id="company_id_input_edit" aria-describedby="emailHelp" placeholder="Company ID" ></div>
-                <div class="form-group col-lg-3">
-                    <label>Company/Department</label>
-                    <input type="input" class="form-control" id="company_department_input_edit" aria-describedby="emailHelp" placeholder="Company/Department" >
+                    <input type="input" class="form-control" name="control_number_input_edit" id="control_number_input_edit" aria-describedby="emailHelp" placeholder="Control Number" >
                 </div>
         </div>
         <div class="row mt-1">
-                <div class="form-group col-lg-3">
-                    <label>Position</label>
-                    <input type="input" class="form-control" id="employee_position_input_edit" aria-describedby="emailHelp" placeholder="Position" >
+                <div class="form-group col-lg-6">
+                    <label>Gadget name</label>
+                    <input type="input" class="form-control" name="gadget_name_input_edit"  id="gadget_name_input_edit" aria-describedby="emailHelp" placeholder="Device Name" >
                 </div>
-                <div class="form-group col-lg-3">
-                    <label>Model Unit / Date Acquired</label>
-                    <input type="input" class="form-control" id="phone_unit_input_edit" aria-describedby="emailHelp" placeholder="Model Unit / Date Acquired " >
+                <div class="form-group col-lg-6">
+                    <label>Gadget Identification</label>
+                    <input type="input" class="form-control" name="gadget_identification_input_edit"  id="gadget_identification_input_edit" aria-describedby="emailHelp" placeholder="Serial Number/IMEI" >
+                </div>     
+        </div>
+
+
+        <div class="row mt-1">
+                <div class="form-group col-lg-6">
+                    <label>Date Acquired</label>
+                    <input type="date" class="form-control" name="gadget_acquired_date_edit"  id="gadget_acquired_date_edit" aria-describedby="emailHelp" placeholder="Serial Number/IMEI" >
                 </div>
-                <div class="form-group col-lg-3">
-                    <label>IMEI number </label>
-                    <input type="input" class="form-control" id="imei_number_input_edit" aria-describedby="emailHelp" placeholder="IMEI number" >
+                
+                <div class="form-group col-lg-6">
+                    <label>Ownership Type</label>
+                    <div class="dropdown">
+                      <select id="ownership_type_input_edit" name="ownership_type_input_edit" class="form-control">
+                        <?php
+                          while ($ownership_row = mysqli_fetch_array($ownership_result2)) {
+                            $ownership_id = $ownership_row['ownership_id'];
+                            $ownership = $ownership_row['ownership_name'];
+                            echo "<option class='dropdown-item' value='$ownership_id'> $ownership</option>";
+                          }
+                        ?>
+                      </select>
+                    </div>
                 </div>
-                <div class="form-group col-lg-3">
-                    <label>Type of ownership</label> <br>
-                    <select id="phone_ownership_input"  name="phone_ownership_input_edit"  class="custom-select">
-                        <option selected value="Personal Unit">Personal Unit</option>
-                        <option value="Service Unit">Service Unit</option>
-                    </select>
+                
+        </div>
+
+        <div class="row mt-1">
+                <div class="form-group col-lg-6">
+                    <label>Gadget Type</label>
+                    <div class="dropdown">
+                      <select id="gadget_type_input_edit" name="gadget_type_input_edit" class="form-control">
+                        <?php
+                          while ($gadget_row = mysqli_fetch_array($gadget_result2)) {
+                            $gadget_id = $gadget_row['gadget_id'];
+                            $gadget = $gadget_row['gadget_name'];
+                            echo "<option class='dropdown-item' value='$gadget_id'> $gadget</option>";
+                          }
+                        ?>
+                      </select>
+                    </div>
+                </div>
+                <div class="form-group col-lg-6">
+                    <label>Requisition Type</label>
+                    <div class="dropdown">
+                      <select id="requisition_type_input_edit" id="requisition_type_input_edit" class="form-control">
+                        <?php
+                          while ($requisition_row = mysqli_fetch_array($requisition_result2)) {
+                            $requisition_id = $requisition_row['requisition_id'];
+                            $requisition = $requisition_row['requisition_name'];
+                            echo "<option class='dropdown-item' value='$requisition_id'> $requisition</option>";
+                          }
+                        ?>
+                      </select>
+                    </div>
                 </div>
         </div>
+
         <div class="row mt-1">
-            <div class="form-group col-lg-3">
-                <label>Laptop Unit/Date Acquired</label>
-                <input type="input" class="form-control" id="laptop_unit_input_edit" aria-describedby="emailHelp" placeholder="Laptop Unit / Date Acquired" >
-            </div>
-            <div class="form-group col-lg-3">
-                <label>Serial Number </label>
-                <input type="input" class="form-control" id="laptop_serial_number_input_edit" aria-describedby="emailHelp" placeholder="Serial Number" >
-            </div>
-            <div class="form-group col-lg-3">
-                <label>Type of ownership</label> <br>
-                <select id = "laptop_ownership_input_edit" class="custom-select">
-                    <option selected value="personal unit">Personal Unit</option>
-                    <option value="service unit">Service Unit</option>
-                    <option value="NO LAPTOP">No laptop</option>
-                </select>
-            </div>
-        </div>
-        <div class="row mt-1">
-            <div class="form-group col-lg-3">
-                <label>Requsition Purpose</label> <br>
-                <select id = "laptop_requisition_purpose_input_edit" class="custom-select">
-                    <option selected value="First Time">First Time</option>
-                    <option value="Loss">Loss</option>
-                    <option value="Additional Gadget">Additional Gadget</option>
-                    <option value="Change of Unit">Change of Unit</option>
-                    <option value="Checklist Replacement">Checklist Replacement</option>
-                    <option value="Others">Others:</option>
-                </select>
-            </div>
-            <div class="form-group col-lg-6">
-                <label>Requisition Purpose Reason</label>
-                <input type="input" class="form-control" id="laptop_requisition_purpose_reason_input_edit" aria-describedby="emailHelp" placeholder="Requisition purpose reason" >
-            </div>
+                <div class="form-group col-lg-6">
+                    <label>Requisition Reason</label>
+                    <input type="input" class="form-control" name = "requisition_reason_input_edit" id="requisition_reason_input_edit" aria-describedby="emailHelp" placeholder="Reason" >
+                </div>
         </div>
      </div>
      <div class="modal-footer">
         <div class="col-md-12 text-right">
             <input type="button" id = 'btn_cancel' name = 'btn_cancel' class="btn btn-default" data-dismiss="modal" value="Cancel">
-            <button type="button" id = 'btn_update' name = 'btn_update' class="btn btn-primary mb-2">Submit</button>
+            <button type="button" id = 'btn_update_gadget' name = 'btn_update_gadget' class="btn btn-primary mb-2">Submit</button>
         </div>
      </div>
     </form>

@@ -48,65 +48,9 @@ session_start();
       <h3><center>CMS</center></h3>
     </a>
 
-    <div class="sidebar">
-      <nav class="mt-2">
-        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-          <li class="nav-item has-treeview menu-closed">
-            <a href="index.php" class="nav-link">
-              <i class="nav-icon fas fa-tachometer-alt"></i>
-              <p>Dashboard
-                <i class="right fas fa-angle-left"></i>
-              </p>
-            </a>
-
-            <ul class="nav nav-treeview">
-              <li class="nav-item">
-                <a href="index.php" class="nav-link active">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Dashboard v1</p>
-                </a>
-              </li>
-            </ul>
-          </li>
-  
-          <li class="nav-header">Gadget Checklist</li>
-          <li class="nav-item">
-            <a href="list_gadgets.php" class="nav-link">
-              <i class="nav-icon far fa-calendar-alt"></i>
-              <p> Add User </p>
-            </a>
-          </li>
-
-          <li class="nav-item">
-            <a href="import_users.php" class="nav-link">
-              <i class="nav-icon far fa-calendar-alt"></i>
-              <p>
-                Import User gadget
-              </p>
-            </a>
-          </li>
-
-            <li class="nav-header">Logout</li>
-          <li class="nav-item">
-            <a href="logout_function.php" class="nav-link">
-              <i class="nav-icon far fa-calendar-alt"></i>
-              <p>
-                Logout
-              </p>
-            </a>
-          </li>
-
-
-          <!-- <li class="nav-header">Logout</li>
-          <li class="nav-item">
-            <a href="calendar.html" class="nav-link">
-              <i class="nav-icon far fa-calendar-alt"></i>
-              <p>Logout</p>
-            </a>
-          </li> -->
-        </ul>
-      </nav>
-    </div>
+    <?php 
+      include('nav.php');
+     ?>
 
 </aside>
 

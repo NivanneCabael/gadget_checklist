@@ -51,7 +51,7 @@ Function insert_new_gadget()
 {
 
 
-    require_once('includes/db_connection_localhost.php');
+    require_once('includes/db_connection_online.php');
 
     // echo $url;
     $fetched_table_name			        = mysqli_real_escape_string($db,$_POST['table_name']);
@@ -70,7 +70,7 @@ Function insert_new_gadget()
    
          $get_user_query = "SELECT id AS employee_id FROM employee WHERE employee_id = '$fetched_employee_id'";    
 		 $employee_result = mysqli_query($db,$get_user_query);
-		 $data =  mysqli_fetch_array($employee_result);
+		$data =  mysqli_fetch_array($employee_result);
 		 $fetched_employee_iid= $data['employee_id'];
 		
 		if(mysqli_num_rows($employee_result) == 0)
@@ -106,65 +106,26 @@ Function insert_new_gadget()
 function insert_new_user()
 {
 
-    require_once('db_connection_localhost.php');
+    require_once('db_connection_online.php');
 
     $upper_employee_id = strtoupper($_POST['employee_id']);
     $sub_path = '/Employee_img/' . $upper_employee_id . '.jpg';
     $employee_pic_base_64 = $_POST['employee_picture'];
-
     $file_path = getcwd() . $sub_path;
-    $path = $sub_path;
 
-    echo $file_path;
-
-    
-    $Image = str_replace('data:image/jpeg;base64,', '', $employee_pic_base_64);
-    $Image = str_replace(' ', '+', $Image);
-    
-    $data = base64_decode($Image); 
-    
-    $im = imagecreatefromstring($data);
-    $source_width = imagesx($im);
-    $source_height = imagesy($im);
-    $ratio =  $source_height / $source_width;
-
-    $new_width = 1000; // assign new width to new resized image
-    $new_height = $ratio * 1000;
-
-    $thumb = imagecreatetruecolor($new_width, $new_height);
-
-    $transparency = imagecolorallocatealpha($thumb, 255, 255, 255, 127);
-    imagefilledrectangle($thumb, 0, 0, $new_width, $new_height, $transparency);
-
-    imagecopyresampled($thumb, $im, 0, 0, 0, 0, $new_width, $new_height, $source_width, $source_height);
-    imagejpeg($thumb, $file_path, 9);
-    imagedestroy($im);
-
-    //$seperated_url  = explode('\\gadget_checklist', $file_path, 6);
-    $seperated_url_prod = explode('\\staging',$file_path);
-    
-     $url = $seperated_url_prod[0];
-     print_r($url);
-   // $url = $seperated_url[1];
-
+      $path = base64_to_jpeg($employee_pic_base_64, $file_path);
   
-    // $seperated_url  = explode('\\gadget_checklist', $file_path, 6);
-    // //$seperated_url_prod = explode('/Production',$file_path);
-    
-    // $url =  $seperated_url[1];
-
-    // $filename = '/Employee_img/' . $upper_employee_id . '.jpg';
+    //$seperated_url  = explode('\\gadget_checklist', $file_path, 6);
+    $seperated_url_prod = explode('/Production',$file_path);
+    print_r($seperated_url_prod);
+    $url = 'http://gadgetchecklist.mads.ph'. $seperated_url_prod[1];
    
     $fetched_table_name			        = mysqli_real_escape_string($db,$_POST['table_name']);
     $fetched_employee_name			    = mysqli_real_escape_string($db,$_POST['employee_name']);
-    $fetched_employee_id       	        = mysqli_real_escape_string($db,$_POST['employee_id']);
+    $fetched_employee_id        	    = mysqli_real_escape_string($db,$_POST['employee_id']);
     $fetched_employee_company   	    = mysqli_real_escape_string($db,$_POST['employee_company']);
     $fetched_employee_department 	    = mysqli_real_escape_string($db,$_POST['employee_department']);
     $fetched_employee_position		    = mysqli_real_escape_string($db,$_POST['employee_position']);
-
-    // $filename = 'gadget_checklist\pages\Employee_img\\' .$fetched_employee_id . '.jpg';
-    
-    // $data = base64_decode($employee_pic_base_64);
 
     $uppercased_employee_id = strtoupper($fetched_employee_id);
 
@@ -172,9 +133,9 @@ function insert_new_user()
     {
         $insert_new_user = "INSERT INTO employee(employee_id,employee_name,company_id,department_id,position,profile_pic_url,employee_status,created_at)
                             VALUES('$uppercased_employee_id','$fetched_employee_name',$fetched_employee_company,$fetched_employee_department,
-                            '$fetched_employee_position','$url',1,NOW())";   
+                            '$fetched_employee_position','$url',1,NOW())";    
         echo $insert_new_user;
-        //$result_insert = mysqli_query($db,$insert_new_user);    
+        $result_insert = mysqli_query($db,$insert_new_user);       
                      
     }
     else {
@@ -185,7 +146,7 @@ function insert_new_user()
 
 function insert_new_user_no_pic()
 {
-    require_once('db_connection_localhost.php');
+    require_once('db_connection_online.php');
 
     // echo $url;
     
@@ -198,20 +159,13 @@ function insert_new_user_no_pic()
 
     $uppercased_employee_id = strtoupper($fetched_employee_id);
 
-    $company_checker =  "SELECT 
-        id AS user_id,
-        FROM employee
-        WHERE 
-        employee_id = '$fetched_employee_id'";
-        $company_result = mysqli_query($db,$company_checker);
-        
     if($fetched_table_name == 'employee_no_picutre')
     {
         $insert_new_user = "INSERT INTO employee(employee_id,employee_name,company_id,department_id,position,employee_status,created_at)
                             VALUES('$uppercased_employee_id','$fetched_employee_name',$fetched_employee_company,$fetched_employee_department,
                             '$fetched_employee_position',1,NOW())"; 
         // ECHO $insert_new_user;   
-        //$result_insert = mysqli_query($db,$insert_new_user);                    
+        $result_insert = mysqli_query($db,$insert_new_user);                    
     }
     else {
         echo 'error';
@@ -221,7 +175,7 @@ function insert_new_user_no_pic()
 
 function fetch_row_data()
 {
-    require_once('db_connection_localhost.php');
+    require_once('db_connection_online.php');
 
 
     $fetched_user_id = mysqli_real_escape_string($db,$_POST['user_id']);
@@ -251,7 +205,7 @@ function fetch_row_data()
 
 function fetch_gadget_row_data()
 {
-    require_once('db_connection_localhost.php');
+    require_once('db_connection_online.php');
 
 
     $fetched_gadget_id = mysqli_real_escape_string($db,$_POST['gadget_id']);
@@ -298,7 +252,7 @@ function fetch_gadget_row_data()
 
 function update_employee()
 {
-    require_once('db_connection_localhost.php');
+    require_once('db_connection_online.php');
 
     $fetched_employee_hidden_id_hidden_id   = mysqli_real_escape_string($db,$_POST['employee_hidden_id']);
     $fetched_employee_id		            = mysqli_real_escape_string($db,$_POST['employee_id']);
@@ -327,7 +281,7 @@ function update_employee()
 
 function update_employee_gadget()
 {
-    require_once('db_connection_localhost.php');
+    require_once('db_connection_online.php');
 
     $fetched_employee_update_gadget_id                      = mysqli_real_escape_string($db,$_POST['update_gadget_id']);
     $fetched_employee_update_employee_id_edit               = mysqli_real_escape_string($db,$_POST['update_employee_id_edit']);
@@ -387,7 +341,7 @@ function update_employee_img()
     // $dbname    	= "gadgetchecklist";
     // // connect to database
     // $db = mysqli_connect($servername. ':' .$port, $username, $password, $dbname);
-    require_once('db_connection_localhost.php');
+    require_once('db_connection_online.php');
 
     $upper_employee_id = strtoupper($_POST['employee_id']);
     $sub_path = '/Employee_img/' . $upper_employee_id . '.jpg';
@@ -429,7 +383,7 @@ function update_employee_img()
 
 function delete_user()
 {
-    require_once('db_connection_localhost.php');
+    require_once('db_connection_online.php');
     $delete_id  = mysqli_real_escape_string($db,$_POST['delete_id']);
 
 	$deleted_user_query = "UPDATE employee
@@ -442,7 +396,7 @@ function delete_user()
 
 function delete_user_gadget()
 {
-    require_once('db_connection_localhost.php');
+    require_once('db_connection_online.php');
     $delete_id  = mysqli_real_escape_string($db,$_POST['delete_id']);
 
 	$deleted_gadget_query = "UPDATE gadget_checklist
@@ -454,7 +408,6 @@ function delete_user_gadget()
 }
 
 function base64_to_jpeg($base64_string, $output_file) {
-
     // open the output file for writing
     $ifp = fopen( $output_file, 'wb' ); 
 
@@ -462,17 +415,13 @@ function base64_to_jpeg($base64_string, $output_file) {
     // $data[ 0 ] == "data:image/png;base64"
     // $data[ 1 ] == <actual base64 string>
     $data = explode( ',', $base64_string );
-    $data_string = $data[1];
-
-    $decoded_image = base64_decode($data_string);
 
     // we could add validation here with ensuring count( $data ) > 1
-
-    fwrite($ifp, $decoded_image);
+    fwrite( $ifp, base64_decode( $data[ 1 ] ) );
 
     // clean up the file resource
     fclose( $ifp ); 
 
-   // return $output_file; 
+    return $output_file; 
 }
 ?>
