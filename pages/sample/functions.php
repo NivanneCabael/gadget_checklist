@@ -113,12 +113,13 @@ function insert_new_user()
     $employee_pic_base_64 = $_POST['employee_picture'];
     $file_path = getcwd() . $sub_path;
 
-      $path = base64_to_jpeg($employee_pic_base_64, $file_path);
+    $path = base64_to_jpeg($employee_pic_base_64, $file_path);
   
     //$seperated_url  = explode('\\gadget_checklist', $file_path, 6);
     $seperated_url_prod = explode('/Production',$file_path);
-    print_r($seperated_url_prod);
     $url = 'http://gadgetchecklist.mads.ph'. $seperated_url_prod[1];
+    // print_r($seperated_url_prod);
+    //$url = $seperated_url[1];
    
     $fetched_table_name			        = mysqli_real_escape_string($db,$_POST['table_name']);
     $fetched_employee_name			    = mysqli_real_escape_string($db,$_POST['employee_name']);
@@ -129,18 +130,32 @@ function insert_new_user()
 
     $uppercased_employee_id = strtoupper($fetched_employee_id);
 
-    if($fetched_table_name == 'employee')
+    $user_checker_query = "SELECT * FROM employee WHERE employee_id = '$uppercased_employee_id'";
+    $employee_result = mysqli_query($db,$user_checker_query);
+    $data =  mysqli_fetch_array($employee_result);
+    //$fetched_employee_result= $data['employee_id'];
+
+    if(!$data) 
     {
-        $insert_new_user = "INSERT INTO employee(employee_id,employee_name,company_id,department_id,position,profile_pic_url,employee_status,created_at)
-                            VALUES('$uppercased_employee_id','$fetched_employee_name',$fetched_employee_company,$fetched_employee_department,
-                            '$fetched_employee_position','$url',1,NOW())";    
-        echo $insert_new_user;
-        $result_insert = mysqli_query($db,$insert_new_user);       
-                     
+        if($fetched_table_name == 'employee')
+        {
+            $insert_new_user = "INSERT INTO employee(employee_id,employee_name,company_id,department_id,position,profile_pic_url,employee_status,created_at)
+                                VALUES('$uppercased_employee_id','$fetched_employee_name',$fetched_employee_company,$fetched_employee_department,
+                                '$fetched_employee_position','$url',1,NOW())";    
+            $result_insert = mysqli_query($db,$insert_new_user);   
+            echo 'Inserted Successfully';    
+                         
+        }
+        else {
+            echo 'error';
+        }
     }
     else {
-        echo 'error';
+       echo 'user id has been used already';
     }
+
+
+   
 
 }
 

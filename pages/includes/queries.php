@@ -1,6 +1,6 @@
 <?php
 
-require_once('db_connection_localhost.php');
+require_once('db_connection_online.php');
 
 $get_department_query = "SELECT
     id AS department_id,

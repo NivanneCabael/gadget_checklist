@@ -186,6 +186,10 @@ function submit_img(img_string)
                 },	
                 success : function(data)
                 {
+                    alert(data);
+                    location.reload();
+                    clear_fields();
+                    
                     // alert("Data Has been Added! Successfully");
                     // location.reload();
                     // clear_fields();
@@ -517,30 +521,6 @@ function delete_user()
         }
        
 	});
-}
-
-function previewFile() {
-    const preview = document.querySelector('img');
-    const file = document.querySelector('input[type=file]').files[0];
-    const reader = new FileReader();
-  
-    reader.addEventListener("load", function () {
-      // convert image file to base64 string
-      preview.src = reader.result;
-    }, false);
-  
-    if (file) {
-      reader.readAsDataURL(file);
-    }
-  }
-
-function cancel_form()
-{
-    $(document).on('click','#btn_cancel',function()
-	{
-        clear_fields();
-	});
-   
 }
 
 // function display_user_checklist()
