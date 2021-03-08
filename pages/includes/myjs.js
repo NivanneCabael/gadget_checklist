@@ -16,8 +16,9 @@ $(document).ready(function()
         //delete record
         delete_user_gadget();
         delete_user();
-        
-        cancel_form();
+
+        //image modal
+        modal_img();
     // display_user_checklist();
 
    
@@ -37,12 +38,17 @@ function add_gadget()
         var requisition_reason 		            = $('#requisition_reason_input').val();
         var employee                            = 'gadget'; 
 
-        if (employee_id == "" || control_number == "" || gadget_name == "" || gadget_identification == "") 
+        if ((gadget_type == '1') && (employee_id == "" || control_number == "" || gadget_name == "" || gadget_identification == "" || ownership_type == "")) 
 		{
 			alert("Please Fill in all the fields");
 			// console.log("Some input fields are empty!");
         }
-        else if(requisition_type == 6 && requisition_reason == '')
+        else if ((gadget_type == '2' && requisition_type != "6") && (employee_id == "" || control_number == "" || gadget_name == "" || gadget_identification == "" || ownership_type == "" )) 
+		{
+			alert("Please Fill in all the fields laptop");
+			// console.log("Some input fields are empty!");
+        }
+        else if((gadget_type == '2' && requisition_type == "6" ) && (requisition_reason == "" || employee_id == "" || control_number == "" || gadget_name == "" || gadget_identification == "" || ownership_type == "" ))
         {
             alert("Please Fill in the reason field");
         }
@@ -121,7 +127,7 @@ function insert_employee()
     var employee_position                   = $('#employee_position_input').val();  
     var employee                            = 'employee_no_picutre'; 
     
-    if (employee_id == "") 
+    if (employee_id == "" || employee_name == "" || employee_company == "" || employee_department == "" || employee_position == "") 
     {
         alert("Please Fill in all the fields");
         // console.log("Some input fields are empty!");
@@ -142,7 +148,7 @@ function insert_employee()
             },	
             success : function(data)
             {
-                alert("Data Has been Added! Successfully");
+                alert(data);
                 location.reload();
                 clear_fields();
 
@@ -164,7 +170,7 @@ function submit_img(img_string)
         var employee_position                   = $('#employee_position_input').val();  
         var employee                            = 'employee'; 
         
-        if (employee_id == "") 
+        if (employee_id == "" || employee_name == "" || employee_company == "" || employee_department == "" || employee_position == "") 
 		{
 			alert("Please Fill in all the fields");
 			// console.log("Some input fields are empty!");
@@ -296,10 +302,19 @@ function udpate_user_gadget()
         var update_requisition_reason   = $('#requisition_reason_input_edit').val();
         var table_name			        ='gadget';
 
-        if (update_employee_id_edit == "" || update_gadget_id == "") 
+        if ((update_gadget_type == '1') && (update_employee_id_edit == "" || update_control_number == "" || update_gadget_name == "" || update_gadget_identification == "" || update_ownership_type == "")) 
 		{
-			alert("Please Fill in all the fields");
+			alert("Please Fill in all the fields cp");
 			// console.log("Some input fields are empty!");
+        }
+        else if ((update_gadget_type == '2' && update_requisition_type != "6") && (update_employee_id_edit == "" || update_control_number == "" || update_gadget_name == "" || update_gadget_identification == "" || update_ownership_type == "" )) 
+		{
+			alert("Please Fill in all the fields laptop");
+			// console.log("Some input fields are empty!");
+        }
+        else if((update_gadget_type == '2' && update_requisition_type == "6" ) && (update_requisition_reason == "" || update_employee_id_edit == "" || update_control_number == "" || update_gadget_name == "" || update_gadget_identification == "" || update_ownership_type == "" ))
+        {
+            alert("Please Fill in the reason field");
         }
         else
         {
@@ -375,7 +390,7 @@ function updateimg(img_string2)
         var employee_position 		            = $('#employee_position_input_edit').val();
         var employee                            = 'employee_img'; 
         
-        if (employee_name == "" || employee_id == "") 
+        if (employee_id == "" || employee_name == "" || employee_company == "" || employee_department == "" || employee_position == "") 
 		{
 			alert("Please Fill in all the fields");
 			// console.log("Some input fields are empty!");
@@ -421,7 +436,7 @@ function update_employee()
         var employee_position 		            = $('#employee_position_input_edit').val();
         var employee                            = 'employee'; 
         
-        if (employee_name == "" || employee_id == "") 
+        if (employee_id == "" || employee_name == "" || employee_company == "" || employee_department == "" || employee_position == "") 
 		{
 			alert("Please Fill in all the fields");
 			// console.log("Some input fields are empty!");
@@ -582,3 +597,27 @@ function reset_table()
 // {
 //     $("#table_body").html("");
 // }
+
+function modal_img(){
+
+    //image modal
+    var modal = document.getElementById("PictureModal");
+
+    // Get the image and insert it inside the modal - use its "alt" text as a caption
+    var ImageModal = document.getElementById("img01");
+
+    $(document).on('click','#img_modal',function()
+	{
+        modal.style.display = "block";
+        ImageModal.src = this.src;
+        captionText.innerHTML = this.alt;
+	})
+
+ // Get the <span> element that closes the modal
+    var span = document.getElementsByClassName("close")[0];
+
+    $(document).on('click',span,function()
+	{
+        modal.style.display = "none";
+	})
+}

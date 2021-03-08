@@ -70,7 +70,7 @@ Function insert_new_gadget()
    
          $get_user_query = "SELECT id AS employee_id FROM employee WHERE employee_id = '$fetched_employee_id'";    
 		 $employee_result = mysqli_query($db,$get_user_query);
-		$data =  mysqli_fetch_array($employee_result);
+		 $data =  mysqli_fetch_array($employee_result);
 		 $fetched_employee_iid= $data['employee_id'];
 		
 		if(mysqli_num_rows($employee_result) == 0)
@@ -83,10 +83,11 @@ Function insert_new_gadget()
 				{
 					$insert_gadget_query =  "INSERT INTO gadget_checklist (employee_id,control_number,gadget_name,gadget_identification,
 											ownership_type_id,gadget_type,date_acquired,requisition_type_id,requisition_purpose_reason,gadget_status,created_at) 
-											VALUES ($uppercased_employee_id,'$fetched_control_number','$fetched_gadget_name','$fetched_gadget_identification',
+											VALUES ($fetched_employee_iid,'$fetched_control_number','$fetched_gadget_name','$fetched_gadget_identification',
 											$fetched_ownership_type,$fetched_gadget_type,'$fetched_gadget_acquired_date',6,'$fetched_requisition_reason',1,NOW())";
 					$insert_new_gadget_result = mysqli_query($db,$insert_gadget_query);
-					echo 'Data Has been saved successfully';
+                    echo 'Data Has been saved successfully';
+                    
 				}
 				else {
 					$insert_gadget_query =  "INSERT INTO gadget_checklist (employee_id,control_number,gadget_name,gadget_identification,
@@ -95,7 +96,8 @@ Function insert_new_gadget()
 											$fetched_ownership_type,$fetched_gadget_type,'$fetched_gadget_acquired_date','$fetched_requisition_type',' ',1,NOW())";
 					
 					$insert_new_gadget_result = mysqli_query($db,$insert_gadget_query);
-					echo 'Data Has been saved successfully';
+                    echo 'Data Has been saved successfully';
+                   
 				}
 				
             }
@@ -119,6 +121,8 @@ function insert_new_user()
     $data = base64_decode($Image); 
 
     // $path = base64_to_jpeg($employee_pic_base_64, $file_path);
+   
+    //Prod Code Starts here
     $im = imagecreatefromstring($data);
     $source_width = imagesx($im);
     $source_height = imagesy($im);
@@ -135,14 +139,16 @@ function insert_new_user()
     imagecopyresampled($thumb, $im, 0, 0, 0, 0, $new_width, $new_height, $source_width, $source_height);
     imagejpeg($thumb, $file_path, 9);
     imagedestroy($im);
+    //prod code ends here
 
 
   
-    //$seperated_url  = explode('\\gadget_checklist', $file_path, 6);
-    $seperated_url_prod = explode('/Production',$file_path);
-    $url = 'http://gadgetchecklist.mads.ph'. $seperated_url_prod[1];
+    $seperated_url  = explode('\\gadget_checklist', $file_path, 6);
+    //prod here
+    //$seperated_url_prod = explode('/Production',$file_path);
+    //$url = 'http://gadgetchecklist.mads.ph'. $seperated_url_prod[1];
     // print_r($seperated_url_prod);
-    //$url = $seperated_url[1];
+    $url = $seperated_url[1];
    
     $fetched_table_name			        = mysqli_real_escape_string($db,$_POST['table_name']);
     $fetched_employee_name			    = mysqli_real_escape_string($db,$_POST['employee_name']);
@@ -156,27 +162,37 @@ function insert_new_user()
     $user_checker_query = "SELECT * FROM employee WHERE employee_id = '$uppercased_employee_id'";
     $employee_result = mysqli_query($db,$user_checker_query);
     $data =  mysqli_fetch_array($employee_result);
-    //$fetched_employee_result= $data['employee_id'];
 
-    if(!$data) 
-    {
-        if($fetched_table_name == 'employee')
-        {
-            $insert_new_user = "INSERT INTO employee(employee_id,employee_name,company_id,department_id,position,profile_pic_url,employee_status,created_at)
-                                VALUES('$uppercased_employee_id','$fetched_employee_name',$fetched_employee_company,$fetched_employee_department,
-                                '$fetched_employee_position','$url',1,NOW())";    
-            $result_insert = mysqli_query($db,$insert_new_user);
-     
-            echo 'Inserted Successfully';    
-                         
+    $disabled_employee_query = "SELECT * FROM employee WHERE employee_id = '$uppercased_employee_id' AND employee_status = '0'";
+    $disabled_employee_result = mysqli_query($db,$disabled_employee_query);
+
+    //print_r($disabled_employee_data);
+    if(mysqli_num_rows($disabled_employee_result) == 1){
+        echo 'The employee has resigned';
+    }
+    else{
+        if(!$data){
+            if($fetched_table_name == 'employee'){
+                $insert_new_user = "INSERT INTO employee(employee_id,employee_name,company_id,department_id,position,profile_pic_url,employee_status,created_at)
+                                    VALUES('$uppercased_employee_id','$fetched_employee_name',$fetched_employee_company,$fetched_employee_department,
+                                    '$fetched_employee_position','$url',1,NOW())";    
+                $result_insert = mysqli_query($db,$insert_new_user);
+            
+                echo 'Inserted Successfully';                   
+            }
+            else {
+                echo 'error';
+            }
         }
         else {
-            echo 'error';
+        echo 'user id has been used already';
         }
     }
-    else {
-       echo 'user id has been used already';
-    }
+
+    
+    //$fetched_employee_result= $data['employee_id'];
+
+    
 
 
    
@@ -198,18 +214,34 @@ function insert_new_user_no_pic()
 
     $uppercased_employee_id = strtoupper($fetched_employee_id);
 
-    if($fetched_table_name == 'employee_no_picutre')
-    {
-        $insert_new_user = "INSERT INTO employee(employee_id,employee_name,company_id,department_id,position,employee_status,created_at)
-                            VALUES('$uppercased_employee_id','$fetched_employee_name',$fetched_employee_company,$fetched_employee_department,
-                            '$fetched_employee_position',1,NOW())"; 
-        // ECHO $insert_new_user;   
-        $result_insert = mysqli_query($db,$insert_new_user);                    
+    $user_checker_query = "SELECT * FROM employee WHERE employee_id = '$uppercased_employee_id'";
+    $employee_result = mysqli_query($db,$user_checker_query);
+    $data =  mysqli_fetch_array($employee_result);
+
+    $disabled_employee_query = "SELECT * FROM employee WHERE employee_id = '$uppercased_employee_id' AND employee_status = '0'";
+    $disabled_employee_result = mysqli_query($db,$disabled_employee_query);
+    
+    if(mysqli_num_rows($disabled_employee_result) == 1){
+        echo 'The employee has resigned';
     }
     else {
-        echo 'error';
-    }
-
+        if(!$data){
+            if($fetched_table_name == 'employee_no_picutre'){
+                $insert_new_user = "INSERT INTO employee(employee_id,employee_name,company_id,department_id,position,employee_status,created_at)
+                                    VALUES('$uppercased_employee_id','$fetched_employee_name',$fetched_employee_company,$fetched_employee_department,
+                                    '$fetched_employee_position',1,NOW())"; 
+                // ECHO $insert_new_user;   
+                $result_insert = mysqli_query($db,$insert_new_user);   
+                echo 'Inserted Successfully';                   
+            }
+            else {
+                echo 'error';
+            }
+        }
+        else {
+        echo 'user id has been used already';
+        }
+    }      
 }
 
 function fetch_row_data()
@@ -386,13 +418,42 @@ function update_employee_img()
     $sub_path = '/Employee_img/' . $upper_employee_id . '.jpg';
     $employee_pic_base_64 = $_POST['employee_picture_update'];
     $file_path = getcwd() . $sub_path;
-    // chmod($file_path , 755);
 
-    $path = base64_to_jpeg($employee_pic_base_64, $file_path);
-    //$seperated_url  = explode('\\gadget_checklist', $file_path, 6);
-    $seperated_url_prod = explode('/Production',$file_path);
-    $url = $url = 'http://gadgetchecklist.mads.ph'. $seperated_url_prod[1];
+    $Image = str_replace('data:image/jpeg;base64,', '', $employee_pic_base_64);
+    $Image = str_replace(' ', '+', $Image);
     
+    $data = base64_decode($Image); 
+
+    // $path = base64_to_jpeg($employee_pic_base_64, $file_path);
+   
+    //Prod Code Starts here
+    $im = imagecreatefromstring($data);
+    $source_width = imagesx($im);
+    $source_height = imagesy($im);
+    $ratio =  $source_height / $source_width;
+
+    $new_width = 1000; // assign new width to new resized image
+    $new_height = $ratio * 1000;
+
+    $thumb = imagecreatetruecolor($new_width, $new_height);
+
+    $transparency = imagecolorallocatealpha($thumb, 255, 255, 255, 127);
+    imagefilledrectangle($thumb, 0, 0, $new_width, $new_height, $transparency);
+
+    imagecopyresampled($thumb, $im, 0, 0, 0, 0, $new_width, $new_height, $source_width, $source_height);
+    imagejpeg($thumb, $file_path, 9);
+    imagedestroy($im);
+    //prod code ends here
+
+
+  
+    $seperated_url  = explode('\\gadget_checklist', $file_path, 6);
+    //prod here
+    //$seperated_url_prod = explode('/Production',$file_path);
+    //$url = 'http://gadgetchecklist.mads.ph'. $seperated_url_prod[1];
+    // print_r($seperated_url_prod);
+    $url = $seperated_url[1];
+   
 
 
     $fetched_employee_hidden_id_hidden_id   = mysqli_real_escape_string($db,$_POST['employee_hidden_id']);
