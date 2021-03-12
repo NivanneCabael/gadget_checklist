@@ -179,6 +179,12 @@ session_start();
                     <input type="input" class="form-control" id="employee_position_input" aria-describedby="emailHelp" placeholder="Position" >
                 </div>
         </div>
+        <div class="row mt-1">
+                <div class="form-group col-lg-4">
+                    <label>Birth Date</label>
+                    <input type="date" class="form-control" id="employee_birthdate_input" aria-describedby="emailHelp">
+                </div>
+        </div>
      </div>
      <div class="modal-footer">
         <div class="col-md-12 text-right">
@@ -248,6 +254,12 @@ session_start();
                 <div class="form-group col-lg-4">
                     <label>Position</label>
                     <input type="input" class="form-control" id="employee_position_input_edit" aria-describedby="emailHelp" placeholder="Position" >
+                </div>
+        </div>
+        <div class="row mt-1">
+                <div class="form-group col-lg-4">
+                    <label>Birth Date</label>
+                    <input type="date" class="form-control" id="employee_birthdate_input_edit" aria-describedby="emailHelp">
                 </div>
         </div>
      </div>

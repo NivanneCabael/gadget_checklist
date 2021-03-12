@@ -90,7 +90,7 @@ session_start();
                             // $dbname    	= "gadgetchecklist";
                             // // connect to database
                             // $db = mysqli_connect($servername. ':' .$port, $username, $password, $dbname);
-                            require_once('pages/includes/db_connection_online.php');
+                            require_once('pages/includes/db_connection_localhost.php');
 
                             $user_gadget_query =   "SELECT 
                                                     a.id AS id,

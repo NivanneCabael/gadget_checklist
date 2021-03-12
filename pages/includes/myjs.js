@@ -125,9 +125,11 @@ function insert_employee()
     var employee_company		            = $('#employee_company_input').val();
     var employee_department	                = $('#employee_department_input').val();
     var employee_position                   = $('#employee_position_input').val();  
+    var employee_birthdate                  = $('#employee_birthdate_input').val();  
     var employee                            = 'employee_no_picutre'; 
     
-    if (employee_id == "" || employee_name == "" || employee_company == "" || employee_department == "" || employee_position == "") 
+    
+    if (employee_id == "" || employee_name == "" || employee_company == "" || employee_department == "" || employee_position == "" || employee_birthdate == "") 
     {
         alert("Please Fill in all the fields");
         // console.log("Some input fields are empty!");
@@ -144,7 +146,8 @@ function insert_employee()
                 employee_name			    :employee_name,
                 employee_company 	        :employee_company,
                 employee_department			:employee_department,
-                employee_position 	        :employee_position
+                employee_position 	        :employee_position,
+                employee_birthdate 	        :employee_birthdate,
             },	
             success : function(data)
             {
@@ -168,9 +171,10 @@ function submit_img(img_string)
         var employee_company		            = $('#employee_company_input').val();
         var employee_department	                = $('#employee_department_input').val();
         var employee_position                   = $('#employee_position_input').val();  
+        var employee_birthdate                  = $('#employee_birthdate_input').val();  
         var employee                            = 'employee'; 
         
-        if (employee_id == "" || employee_name == "" || employee_company == "" || employee_department == "" || employee_position == "") 
+        if (employee_id == "" || employee_name == "" || employee_company == "" || employee_department == "" || employee_position == "" || employee_birthdate == "") 
 		{
 			alert("Please Fill in all the fields");
 			// console.log("Some input fields are empty!");
@@ -188,7 +192,8 @@ function submit_img(img_string)
 					employee_name			    :employee_name,
                     employee_company 	        :employee_company,
                     employee_department			:employee_department,
-                    employee_position 	        :employee_position
+                    employee_position 	        :employee_position,
+                    employee_birthdate 	        :employee_birthdate
                 },	
                 success : function(data)
                 {
@@ -224,14 +229,33 @@ function get_employee_row()
                 dataType:'JSON',
                 success: function(user_data)
                 {
-                    //  console.log(user_data[8]);
+                    console.log(user_data);
+                   
                 // $("#btn_submit_edit").attr("id", "btn_update");
-                $('#employee_hidden_id').val(user_data[0]);
-				$('#employee_id_input_edit').val(user_data[1]);
-                $('#employee_name_input_edit').val(user_data[2]);
-                $('#employee_company_input_edit').val(user_data[3]);
-				$('#employee_department_input_edit').val(user_data[4]);
-                $('#employee_position_input_edit').val(user_data[5]);
+                
+                // 
+
+                if (user_data[6] === null) {
+                    $('#employee_hidden_id').val(user_data[0]);
+                    $('#employee_id_input_edit').val(user_data[1]);
+                    $('#employee_name_input_edit').val(user_data[2]);
+                    $('#employee_company_input_edit').val(user_data[3]);
+                    $('#employee_department_input_edit').val(user_data[4]);
+                    $('#employee_position_input_edit').val(user_data[5]);
+                    $('#employee_birthdate_input_edit').val("");
+                }
+                else{
+                    $('#employee_hidden_id').val(user_data[0]);
+                    $('#employee_id_input_edit').val(user_data[1]);
+                    $('#employee_name_input_edit').val(user_data[2]);
+                    $('#employee_company_input_edit').val(user_data[3]);
+                    $('#employee_department_input_edit').val(user_data[4]);
+                    $('#employee_position_input_edit').val(user_data[5]);
+                    $('#employee_birthdate_input_edit').val(user_data[6]);
+                }
+
+
+                
                 // reset_table();
                
                 }
@@ -388,9 +412,10 @@ function updateimg(img_string2)
         var employee_company 		            = $('#employee_company_input_edit').val();
         var employee_department	                = $('#employee_department_input_edit').val();
         var employee_position 		            = $('#employee_position_input_edit').val();
+        var employee_birthdate		            = $('#employee_birthdate_input_edit').val();
         var employee                            = 'employee_img'; 
         
-        if (employee_id == "" || employee_name == "" || employee_company == "" || employee_department == "" || employee_position == "") 
+        if (employee_id == "" || employee_name == "" || employee_company == "" || employee_department == "" || employee_position == "" || employee_birthdate == "") 
 		{
 			alert("Please Fill in all the fields");
 			// console.log("Some input fields are empty!");
@@ -409,11 +434,12 @@ function updateimg(img_string2)
                     employee_company			:employee_company,
                     employee_department 	    :employee_department,
                     employee_position		    :employee_position,
+                    employee_birthdate          :employee_birthdate,
                     table_name			        :employee
 				},
 			success : function(data)
 			{
-                alert("Data Has been Updated! Successfully");
+                alert("Employee information updated");
                 location.reload();
                 clear_fields();
 
@@ -434,9 +460,10 @@ function update_employee()
         var employee_company 		            = $('#employee_company_input_edit').val();
         var employee_department	                = $('#employee_department_input_edit').val();
         var employee_position 		            = $('#employee_position_input_edit').val();
+        var employee_birthdate		            = $('#employee_birthdate_input_edit').val();
         var employee                            = 'employee'; 
         
-        if (employee_id == "" || employee_name == "" || employee_company == "" || employee_department == "" || employee_position == "") 
+        if (employee_id == "" || employee_name == "" || employee_company == "" || employee_department == "" || employee_position == "" || employee_birthdate == "") 
 		{
 			alert("Please Fill in all the fields");
 			// console.log("Some input fields are empty!");
@@ -454,13 +481,15 @@ function update_employee()
                     employee_company			:employee_company,
                     employee_department 	    :employee_department,
                     employee_position		    :employee_position,
+                    employee_birthdate          :employee_birthdate,
                     table_name			        :employee
 				},
 			success : function(data)
 			{
-                alert("Data Has been Updated! Successfully");
+                alert("Employee information updated");
                 location.reload();
                 clear_fields();
+
 				// console.log("Sucessfully inserted the data");
 				// $('form').trigger('reset');
 				// display_category();
